@@ -1,0 +1,98 @@
+# Discord Music Bot (LavaLyra)
+
+A simple Discord music bot using **discord.py** and **lava-lyra**.  
+Supports music playback from YouTube, Spotify, Apple Music, and more with Lavalink/Nodelink.
+
+---
+
+## Features
+
+- Play music from multiple sources (YouTube, Spotify, Apple Music)
+- Automatic node connection with Lavalink or Nodelink
+- Slash commands with Discord app_commands
+- Supports LavaLyrics and LavaSearch plugins
+- Fallback support for better reliability
+
+---
+
+## Requirements
+
+- Python 3.11+
+- discord.py
+- [lava-lyra](https://github.com/ParrotXray/lava-lyra)
+- Lavalink or Nodelink server
+
+---
+
+## Installation
+
+1. Clone this repository:
+```bash
+    git clone https://github.com/yourusername/discord-music-bot.git
+    cd discord-music-bot
+```
+
+2. Install dependencies:
+```bash
+    pip install -r requirements.txt
+```
+
+> Make sure requirements.txt includes:
+> discord.py
+> lava-lyra
+
+3. Setup Lavalink server:
+- Download from Lavalink GitHub: https://github.com/freyacodes/Lavalink
+- Run with Java 17+
+- Default host: localhost, port: 2333, password: youshallnotpass
+
+---
+
+## Configuration
+
+- Replace your bot token in `bot.run('TOKEN')`
+- Optionally, modify Lavalink node settings in `on_ready()`:
+```
+    host='localhost'
+    port=2333
+    password='youshallnotpass'
+    secure=False
+    identifier='MAIN'
+    lyrics=False
+    search=True
+    fallback=True
+```
+---
+
+## Usage
+
+### Slash Command
+
+/play <query> - Play a song in your current voice channel
+
+- Example:
+
+    /play Never Gonna Give You Up
+
+> The bot will automatically join your voice channel, search for the track, and play it.
+
+---
+
+## Notes
+
+- You must be in a voice channel to use the /play command.
+- Supports Lavalink plugins (lyrics, search) if enabled.
+- Ensure Lavalink node is running before starting the bot.
+
+---
+
+## License
+
+This project is licensed under **GPL-3.0 License**. See LICENSE for details.
+
+---
+
+## Author
+
+- littlecommandcat
+- GitHub: https://github.com/littlecommandcat
