@@ -15,6 +15,7 @@ class Bot(commands.Bot):
         print(f'{node_id}: lavalink({is_lavalink}) reconnect({reconnect})')
 
     async def on_ready(self):
+        await self.tree.sync()
         print(f'Logged in as {self.user}')
 
         # Create Lavalink nodes - much simpler than before!
