@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Discord Music Bot (LavaLyra)
 
 A simple Discord music bot using **discord.py** and **lava-lyra**.  
@@ -97,9 +96,3 @@ This project is licensed under **GPL-3.0 License**. See LICENSE for details.
 
 - littlecommandcat
 - GitHub: https://github.com/littlecommandcat
-=======
-# Discord-Music-Bot
-A discord music bot using lava-Lyra
-
-Coming soon(Maybe
->>>>>>> c1e12204e972ee4f1dd2ba430880c217bf293f84
