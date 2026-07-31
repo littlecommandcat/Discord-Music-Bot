@@ -37,9 +37,9 @@ class MusicFilters(commands.Cog):
 
         return player
 
-    @commands.command()
+    @commands.command(name="rotate")
     @commands.guild_only()
-    async def rotate(self, ctx: commands.Context, hz: float = 2.0):
+    async def set_rotate(self, ctx: commands.Context, hz: float = 2.0):
         """Apply a rotation filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -62,9 +62,9 @@ class MusicFilters(commands.Cog):
 
         await ctx.send(embed=self.music_embed)
 
-    @commands.command()
+    @commands.command(name="vibrato")
     @commands.guild_only()
-    async def vibrato(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
+    async def set_vibrato(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
         """Apply a vibrato filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -90,9 +90,9 @@ class MusicFilters(commands.Cog):
 
         await ctx.send(embed=self.music_embed)
 
-    @commands.command()
+    @commands.command(name="tremolo")
     @commands.guild_only()
-    async def tremolo(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
+    async def set_tremolo(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
         """Apply a tremolo filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -118,9 +118,9 @@ class MusicFilters(commands.Cog):
 
         await ctx.send(embed=self.music_embed)
 
-    @commands.command()
+    @commands.command(name="lowpass")
     @commands.guild_only()
-    async def lowpass(self, ctx: commands.Context, strength: int = 5):
+    async def set_lowpass(self, ctx: commands.Context, strength: int = 5):
         """Apply a low-pass filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -168,9 +168,47 @@ class MusicFilters(commands.Cog):
 
         await ctx.send(embed=self.music_embed)
 
+    @commands.command(name="nightcore")
+    @commands.guild_only()
+    async def set_nightcore(self, ctx: commands.Context):
+        """Change the music playback speed."""
+        player = await self.get_player(ctx)
+        if not player:
+            return
+
+
+        # Add/Set music filter
+        await player.add_filter(
+            lava_lyra.Timescale.nightcore()
+        )
+
+        self.music_embed.description = f"Filter set as `nightcore`."
+        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable all filters"
+
+        await ctx.send(embed=self.music_embed)
+
+    @commands.command(name="vaporwave")
+    @commands.guild_only()
+    async def set_vaporwave(self, ctx: commands.Context):
+        """Change the music playback speed."""
+        player = await self.get_player(ctx)
+        if not player:
+            return
+
+
+        # Add/Set music filter
+        await player.add_filter(
+            lava_lyra.Timescale.vaporwave()
+        )
+
+        self.music_embed.description = f"Filter set as `vaporwave`."
+        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable all filters"
+
+        await ctx.send(embed=self.music_embed)
+
     @commands.command(name="clearfilters")
     @commands.guild_only()
-    async def clear_all_filters(self, ctx: commands.Context):
+    async def clear_all_filters(self, ctx: commands.Context, *, filters: str = None):
         """Clear all active filters."""
         player = await self.get_player(ctx)
         if not player:
@@ -181,10 +219,22 @@ class MusicFilters(commands.Cog):
             self.music_embed.description = "No filter enabled."
             return await ctx.send(embed=self.music_embed)
 
-        # Reset music filter
-        await player.reset_filters(fast_apply=True)
+        # Filters
+        filter_list = filters.split(" ")
 
-        self.music_embed.description = "All music filters have been cleared."
+        if not filter_list:
+            # Reset all music filters
+            await player.reset_filters(fast_apply=True)
+
+            self.music_embed.description = "All music filters have been cleared."
+
+        else:
+            # Reset specific filter
+            for ftag in filter_list:
+                await player.remove_filter(filter_tag=ftag, fast_apply=True)
+
+            self.music_embed.description = "Specific music filters have been cleared."
+
         self.music_embed.footer.text = ""
 
         await ctx.send(embed=self.music_embed)
