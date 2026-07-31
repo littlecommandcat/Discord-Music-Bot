@@ -21,6 +21,7 @@ PASSWORD = os.getenv("PASSWORD", "youshallnotpass")
 SECURE = os.getenv("SECURE", "false").lower() == "true"
 
 INTENTS = discord.Intents.default()
+INTENTS.message_content = True
 
 
 class Bot(commands.Bot):
