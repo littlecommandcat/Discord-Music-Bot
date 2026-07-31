@@ -43,13 +43,18 @@ class PresenceTask(commands.Cog):
                 current = player.current
                 if player.is_playing and current:
                     if self.is_youtube(current.uri) or self.is_twitch(current.uri):
+                        # Set youtube/twitch status
                         await self.bot.change_presence(
                             activity=discord.Streaming(name=player.current.title[:120], url=current.uri)
                         )
                     else:
+                        # Set streaming status
                         await self.bot.change_presence(
                             activity=discord.Activity(name=player.current.title[:120], type=discord.ActivityType.listening)
                         )
+
+                    # Set music title as channel status
+                    await player.channel.edit(status=player.current.title[:120])
                         
                     return
         

@@ -1,4 +1,4 @@
-lava-lyra
-discord.py
+lava-lyra>=2.0.0
+discord.py>=2.6.0
 pynacl
 python-dotenv
