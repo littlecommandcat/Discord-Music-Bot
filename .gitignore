@@ -219,3 +219,6 @@ __marimo__/
 
 # Delete txt
 *.txt
+
+# Test
+test/
