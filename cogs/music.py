@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 import lava_lyra
 from core import CustomPlayer
+from typing import cast
 
 class Music(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -95,6 +96,33 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
             await interaction.guild.voice_client.disconnect(force=True)
 
         await interaction.followup.send("I'm now leaving the voice channel.")
+
+    @app_commands.command(name='skip', description='skip current music')
+    async def skip(self, interaction: discord.Interaction):
+        voice_client = interaction.guild.voice_client
+        # Check if voice client exists
+        if not interaction.guild.voice_client:
+            return await interaction.response.send_message("I'm not in a voice channel.")
+
+        # Check if voice client is CustomPlayer
+        if not isinstance(voice_client, CustomPlayer):
+            return await interaction.response.send_message("I'm not in a music player.")
+
+        player: CustomPlayer = interaction.guild.voice_client
+
+        # Check if queue is empty
+        if player.queue.is_empty:
+            return await interaction.response.send_message("Music queue is empty")
+
+        # Check player playing
+        if not player.is_playing:
+            return await interaction.response.send_message("I'm not playing any music now.")
+
+        current = player.current
+        # Stop current music before play next
+        await player.stop()  # Call stop event
+
+        await interaction.response.send_message(f"You skip **[{current.title}]({current.uri})**")
 
     @app_commands.command(name='queue', description='show play queue')
     async def queue(self, interaction: discord.Interaction):
@@ -231,6 +259,8 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
         playqueue = player.queue.get_queue()
         msg = ''
         for i, track in enumerate(playqueue, 1):
+            # Track object
+            track = cast(lava_lyra.Track, track)
             msg += f'{i}. [{track.title}]({track.uri})\n'
         
         embed = discord.Embed(
@@ -265,6 +295,24 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
         )
 
         return await interaction.response.send_message(embed=embed)
+
+    @app_commands.command(name='clear-history', description='Clear all play history')
+    async def history(self, interaction: discord.Interaction):
+        # Basic music player check
+        if not interaction.guild.voice_client:
+            return await interaction.response.send_message("I'm not in a voice channel.")
+        
+        if not isinstance(interaction.guild.voice_client, CustomPlayer):
+            return await interaction.response.send_message("I'm not a music player now.")
+        
+        player: CustomPlayer = interaction.guild.voice_client
+
+        if player.queue.history_is_empty:
+            return await interaction.response.send_message("History is empty.")
+
+        player.queue.clear_history()
+
+        return await interaction.response.send_message("Cleared music history.")
     
 async def setup(bot: commands.Bot):
     await bot.add_cog(Music(bot))
