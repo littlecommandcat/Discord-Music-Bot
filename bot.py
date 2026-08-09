@@ -2,7 +2,9 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
+import json
 from dotenv import load_dotenv
+from typing import Dict, List
 import lava_lyra
 from lava_lyra.exceptions import (
     NodeConnectionFailure,
@@ -15,10 +17,10 @@ TOKEN = os.getenv("TOKEN")
 PREFIX = os.getenv("PREFIX", "?")
 
 # Lavalink/Nodelink Configuration
-HOST = os.getenv("HOST", "localhost")
-PORT = int(os.getenv("PORT", 443))
-PASSWORD = os.getenv("PASSWORD", "youshallnotpass")
-SECURE = os.getenv("SECURE", "false").lower() == "true"
+# HOST = os.getenv("HOST", "localhost")
+# PORT = int(os.getenv("PORT", 443))
+# PASSWORD = os.getenv("PASSWORD", "youshallnotpass")
+# SECURE = os.getenv("SECURE", "false").lower() == "true"
 
 INTENTS = discord.Intents.default()
 INTENTS.message_content = True
@@ -33,27 +35,45 @@ class Bot(commands.Bot):
         )
         self.pool = lava_lyra.NodePool()
 
+    def load_lavalinks(self):
+        # Load lavalinks' settings
+        with open("settings.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+        
     async def connect_nodes(self):
-        try:
-            # Create Lavalink node with plugin supports
-            node: lava_lyra.Node = await self.pool.create_node(
-            bot=self,
-            host=HOST, 
-            port=PORT, 
-            password=PASSWORD, 
-            secure=SECURE, 
-            identifier='MAIN', 
-            lyrics=True, # Enable LavaLyrics plugin support
-            search=True, # Enable LavaSearch plugin support
-            fallback=True, # Enable fallback node
-            )
-            print(f"Created node: {node._identifier}")
-        except NodeCreationError as error:
-            print(f"Node error while creating: {error}")
-        except NodeConnectionFailure as error:
-            print(f"Node error while connecting: {error}")
-        except Exception as error:
-            print(f"Exception: {error}")
+        # Get lavalinks
+        lavalinks: Dict = self.load_lavalinks()
+        for node in lavalinks:
+            node_info: Dict = lavalinks.get(node, {})
+            host: str = node_info.get("host", "localhost")
+            port: int = node_info.get("port", 443)
+            password: str = node_info.get("password", "youshallnotpass")
+            secure = bool(node_info.get("enable_secure", False))
+            lyrics = bool(node_info.get("enable_lyrics", False))
+            search = bool(node_info.get("enable_search", False))
+            fallback = bool(node_info.get("enable_fallback", False))
+            # Split line
+            print("=" * 10)
+            try:
+                # Create Lavalink node with plugin supports
+                node: lava_lyra.Node = await self.pool.create_node(
+                    bot=self,
+                    host=host, 
+                    port=port, 
+                    password=password, 
+                    secure=secure, 
+                    identifier=node, # Node identify
+                    lyrics=lyrics, # Enable LavaLyrics plugin support
+                    search=search, # Enable LavaSearch plugin support
+                    fallback=fallback, # Enable fallback node
+                )
+                print(f"Created node: {node._identifier}")
+            except NodeCreationError as error:
+                print(f"Node ({node}) error while creating: {error}")
+            except NodeConnectionFailure as error:
+                print(f"Node ({node}) error while connecting: {error}")
+            except Exception as error:
+                print(f"Exception ({node}): {error}")
 
     async def load_extensions(self):
         for filename in os.listdir("./cogs"):

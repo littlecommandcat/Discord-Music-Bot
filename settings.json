@@ -1,0 +1,20 @@
+{
+  "node1": {
+    "host": "127.0.0.1",
+    "port": 2333,
+    "password": "youshallnotpass",
+    "enable_secure": false,
+    "enable_lyrics": true,
+    "enable_search": true,
+    "enable_fallback": false
+  },
+  "node2": {
+    "host": "lavalink.example.com",
+    "port": 443,
+    "password": "your_secure_password",
+    "enable_secure": true,
+    "enable_lyrics": false,
+    "enable_search": true,
+    "enable_fallback": true
+  }
+}

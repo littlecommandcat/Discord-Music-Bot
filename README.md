@@ -58,22 +58,23 @@ pip install -r requirements.txt
 TOKEN=""    # Discord bot token
 PREFIX=""   # Bot command prefix
 
-# Lavalink/Nodelink Configuration
-HOST=""     # Host
-PORT=433    # Port
-PASSWORD="" # Password
-SECURE=true # Enable https
+# Lavalink/Nodelink Configuration -> settings.json
 ```
 
-## Node Configuration
-
+5. Settings(Lavalink)
+```json
+{
+  "node1": { // Node identify
+    "host": "127.0.0.1", // Node host (default "localhost")
+    "port": 2333, // Node port (default 443)
+    "password": "youshallnotpass", // Lavalink password (default "youshallnotpass")
+    "enable_secure": false, // Enable secure (default false)
+    "enable_lyrics": true, // Enable lyrics (default false))
+    "enable_search": true, // Enable search (default false))
+    "enable_fallback": false // Enable fallback (default false))
+  }
+}
 ```
-identifier='MAIN'
-lyrics=False
-search=True
-fallback=True
-```
----
 
 ## Usage
 
