@@ -1,11 +1,10 @@
 import lava_lyra
-from typing import List, Optional
 
 # Set CustomQueue
 class CustomQueue(lava_lyra.Queue):
-    def __init__(self, max_size: Optional[int] = None, max_history: int = 0, *, overflow: bool = True):
+    def __init__(self, max_size: int | None = None, max_history: int = 0, *, overflow: bool = True):
         super().__init__(max_size, overflow=overflow)
-        self._history: List = []
+        self._history: list = []
         self._max_history: int = max(0, max_history)
 
     @property
@@ -30,8 +29,8 @@ class CustomQueue(lava_lyra.Queue):
 
         self._history.append(track)
 
-    def clear_history(self) -> List[lava_lyra.Track]:
+    def clear_history(self) -> list[lava_lyra.Track]:
         return self._history.clear()
     
-    def get_history(self) -> List[lava_lyra.Track]:
+    def get_history(self) -> list[lava_lyra.Track]:
         return self._history.copy()

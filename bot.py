@@ -4,7 +4,6 @@ import asyncio
 import os
 import json
 from dotenv import load_dotenv
-from typing import Dict, List
 import lava_lyra
 from lava_lyra.exceptions import (
     NodeConnectionFailure,
@@ -36,15 +35,22 @@ class Bot(commands.Bot):
         self.pool = lava_lyra.NodePool()
 
     def load_lavalinks(self):
-        # Load lavalinks' settings
-        with open("settings.json", "r", encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            # Load lavalinks' settings
+            with open("settings.json", "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            print(f"Json file not found.")
+            return {}
+        except json.JSONDecodeError:
+            print("Failed to load json.")
+            return {}
         
     async def connect_nodes(self):
         # Get lavalinks
-        lavalinks: Dict = self.load_lavalinks()
+        lavalinks: dict = self.load_lavalinks()
         for node in lavalinks:
-            node_info: Dict = lavalinks.get(node, {})
+            node_info: dict = lavalinks.get(node, {})
             host: str = node_info.get("host", "localhost")
             port: int = node_info.get("port", 443)
             password: str = node_info.get("password", "youshallnotpass")
@@ -72,7 +78,7 @@ class Bot(commands.Bot):
                 print(f"Node ({node}) error while creating: {error}")
             except NodeConnectionFailure as error:
                 print(f"Node ({node}) error while connecting: {error}")
-            except Exception as error:
+            except Exception as error: # noqa: BLE001
                 print(f"Exception ({node}): {error}")
 
     async def load_extensions(self):

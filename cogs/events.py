@@ -74,10 +74,13 @@ class EventHandler(commands.Cog):
             return
 
         # Bot leaves the voice channel
-        if member.id == self.bot.user.id:
-            if before.channel is not None and after.channel is None:
-                if isinstance(voice_client, CustomPlayer):
-                    await voice_client.destroy()
+        if (
+            member.id == self.bot.user.id
+            and before.channel is not None
+            and after.channel is None
+            and isinstance(voice_client, CustomPlayer)
+        ):
+            await voice_client.destroy()
             return
 
         # Bot is not connected to a voice channel
@@ -87,12 +90,16 @@ class EventHandler(commands.Cog):
         client_channel = voice_client.channel
 
         # Member leaves the bot's voice channel
-        if before.channel == client_channel and after.channel != client_channel:
-            if len(client_channel.members) == 1:
-                if isinstance(voice_client, CustomPlayer):
-                    await voice_client.destroy()
-                else:
-                    await voice_client.disconnect()
+        if (
+            before.channel == client_channel
+            and after.channel != client_channel
+            and len(client_channel.members) == 1
+            and isinstance(voice_client, CustomPlayer)
+        ):
+            await voice_client.destroy()
+            
+        else:
+            await voice_client.disconnect()
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(EventHandler(bot))

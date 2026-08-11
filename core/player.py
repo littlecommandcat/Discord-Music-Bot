@@ -1,13 +1,12 @@
 import lava_lyra
 from .queue import CustomQueue
-from typing import List, Optional
 
 # Set CustomPlayer
 class CustomPlayer(lava_lyra.Player):
     def __init__(self, client, channel, *, node = None):
         super().__init__(client, channel, node=node)
         self.queue = CustomQueue()
-        self._last_track: Optional[lava_lyra.Track] = None
+        self._last_track: lava_lyra.Track | None = None
 
     async def destroy(self) -> None:
         # Clear queue data
@@ -17,7 +16,7 @@ class CustomPlayer(lava_lyra.Player):
 
         return await super().destroy()
     
-    async def play_next(self, *, volume: Optional[int] = None) -> None:
+    async def play_next(self, *, volume: int | None = None) -> None:
         # Play next song in the queue
         if self.queue.is_empty:
             return

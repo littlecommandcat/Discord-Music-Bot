@@ -253,7 +253,7 @@ class MusicFilters(commands.Cog):
 
     @commands.command(name="clearfilters")
     @commands.guild_only()
-    async def clear_all_filters(self, ctx: commands.Context, *, filters: str = None):
+    async def clear_all_filters(self, ctx: commands.Context, *, filters: str | None = None):
         """Clear all active filters."""
         player = await self.get_player(ctx)
         if not player:

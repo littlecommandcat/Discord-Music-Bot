@@ -3,7 +3,6 @@ from discord import app_commands
 from discord.ext import commands
 import lava_lyra
 from core import CustomPlayer
-from typing import cast
 
 class Music(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -123,31 +122,6 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
         await player.stop()  # Call stop event
 
         await interaction.response.send_message(f"You skip **[{current.title}]({current.uri})**")
-
-    @app_commands.command(name='queue', description='show play queue')
-    async def queue(self, interaction: discord.Interaction):
-        # Check voice and player type
-        if not interaction.guild.voice_client:
-            return await interaction.response.send_message("I'm not in a voice channel.")
-        
-        if not isinstance(interaction.guild.voice_client, CustomPlayer):
-            return await interaction.response.send_message("I'm now not a music player.")
-        
-        player: CustomPlayer = interaction.guild.voice_client
-        if player.queue.is_empty:
-            return await interaction.response.send_message("There is nothing in the play queue.")
-        
-        # Build queue list string
-        msg = ''
-        for i, track in enumerate(player.queue):
-            msg += f'{i}. {track.title}\n'
-        
-        # Send play queue as Embed
-        embed = discord.Embed(
-            title = 'Play Queue',
-            description = msg
-        )
-        return await interaction.response.send_message(embed=embed)
     
     @app_commands.command(name='lyrics', description='show music lyrics')
     async def lyrics(self, interaction: discord.Interaction):
@@ -260,7 +234,9 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
         msg = ''
         for i, track in enumerate(playqueue, 1):
             # Track object
-            track = cast(lava_lyra.Track, track)
+            if not isinstance(track, lava_lyra.Track):
+                continue
+            
             msg += f'{i}. [{track.title}]({track.uri})\n'
         
         embed = discord.Embed(
@@ -297,7 +273,7 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
         return await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name='clear-history', description='Clear all play history')
-    async def history(self, interaction: discord.Interaction):
+    async def clear_history(self, interaction: discord.Interaction):
         # Basic music player check
         if not interaction.guild.voice_client:
             return await interaction.response.send_message("I'm not in a voice channel.")
