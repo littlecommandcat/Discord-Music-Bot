@@ -1,14 +1,12 @@
-import discord
-from discord.ext import commands
 import asyncio
-import os
 import json
-from dotenv import load_dotenv
+import os
+
+import discord
 import lava_lyra
-from lava_lyra.exceptions import (
-    NodeConnectionFailure,
-    NodeCreationError
-)
+from discord.ext import commands
+from dotenv import load_dotenv
+from lava_lyra.exceptions import NodeConnectionFailure, NodeCreationError
 
 # Get Basic Bot Info
 load_dotenv()
@@ -28,10 +26,7 @@ INTENTS.message_content = True
 class Bot(commands.Bot):
     def __init__(self):
         # Setup bot intents
-        super().__init__(
-            intents=INTENTS,
-            command_prefix=PREFIX
-        )
+        super().__init__(intents=INTENTS, command_prefix=PREFIX)
         self.pool = lava_lyra.NodePool()
 
     def load_lavalinks(self):
@@ -40,12 +35,12 @@ class Bot(commands.Bot):
             with open("settings.json", "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError:
-            print(f"Json file not found.")
+            print("Json file not found.")
             return {}
         except json.JSONDecodeError:
             print("Failed to load json.")
             return {}
-        
+
     async def connect_nodes(self):
         # Get lavalinks
         lavalinks: dict = self.load_lavalinks()
@@ -64,21 +59,21 @@ class Bot(commands.Bot):
                 # Create Lavalink node with plugin supports
                 node: lava_lyra.Node = await self.pool.create_node(
                     bot=self,
-                    host=host, 
-                    port=port, 
-                    password=password, 
-                    secure=secure, 
-                    identifier=node, # Node identify
-                    lyrics=lyrics, # Enable LavaLyrics plugin support
-                    search=search, # Enable LavaSearch plugin support
-                    fallback=fallback, # Enable fallback node
+                    host=host,
+                    port=port,
+                    password=password,
+                    secure=secure,
+                    identifier=node,  # Node identify
+                    lyrics=lyrics,  # Enable LavaLyrics plugin support
+                    search=search,  # Enable LavaSearch plugin support
+                    fallback=fallback,  # Enable fallback node
                 )
                 print(f"Created node: {node._identifier}")
             except NodeCreationError as error:
                 print(f"Node ({node}) error while creating: {error}")
             except NodeConnectionFailure as error:
                 print(f"Node ({node}) error while connecting: {error}")
-            except Exception as error: # noqa: BLE001
+            except Exception as error:  # noqa: BLE001
                 print(f"Exception ({node}): {error}")
 
     async def load_extensions(self):
@@ -92,11 +87,11 @@ class Bot(commands.Bot):
     async def setup_hook(self):
         # Load cogs from ./cogs
         await self.load_extensions()
-        
+
     async def on_ready(self):
         # Sync slash commands
         commands = await self.tree.sync()
-        print(f'Logged in as {self.user}')
+        print(f"Logged in as {self.user}")
         print(f"Synced {len(commands)} commands")
         # Initialize node connections
         await self.connect_nodes()
@@ -108,6 +103,7 @@ async def main():
     async with bot:
         await bot.start(TOKEN)
 
+
 # Run the bot
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())

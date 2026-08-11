@@ -1,6 +1,7 @@
 import discord
 import lava_lyra
 from discord.ext import commands
+
 from core import CustomPlayer
 
 
@@ -57,14 +58,20 @@ class MusicFilters(commands.Cog):
             fast_apply=True,
         )
 
-        self.music_embed.description = f"Rotation filter enabled.\n**Rotation speed: `{hz} Hz`**"
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = (
+            f"Rotation filter enabled.\n**Rotation speed: `{hz} Hz`**"
+        )
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
     @commands.command(name="vibrato")
     @commands.guild_only()
-    async def set_vibrato(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
+    async def set_vibrato(
+        self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0
+    ):
         """Apply a vibrato filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -86,13 +93,17 @@ class MusicFilters(commands.Cog):
         )
 
         self.music_embed.description = f"Vibrato filter enabled.\n**Depth: `{depth}` | Frequency: `{frequency} Hz`**"
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
     @commands.command(name="tremolo")
     @commands.guild_only()
-    async def set_tremolo(self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0):
+    async def set_tremolo(
+        self, ctx: commands.Context, depth: int = 5, frequency: float = 2.0
+    ):
         """Apply a tremolo filter."""
         player = await self.get_player(ctx)
         if not player:
@@ -114,7 +125,9 @@ class MusicFilters(commands.Cog):
         )
 
         self.music_embed.description = f"Tremolo filter enabled.\n**Depth: `{depth}` | Frequency: `{frequency} Hz`**"
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
@@ -138,8 +151,12 @@ class MusicFilters(commands.Cog):
             fast_apply=True,
         )
 
-        self.music_embed.description = f"Low-pass filter enabled.\n**Filter strength: `{strength}`**"
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = (
+            f"Low-pass filter enabled.\n**Filter strength: `{strength}`**"
+        )
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
@@ -164,7 +181,9 @@ class MusicFilters(commands.Cog):
         )
 
         self.music_embed.description = f"Playback speed set to `{speed}x`."
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
@@ -176,14 +195,13 @@ class MusicFilters(commands.Cog):
         if not player:
             return
 
-
         # Add/Set music filter
-        await player.add_filter(
-            lava_lyra.Timescale.nightcore()
-        )
+        await player.add_filter(lava_lyra.Timescale.nightcore())
 
-        self.music_embed.description = f"Filter set as `nightcore`."
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = "Filter set as `nightcore`."
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
@@ -195,14 +213,13 @@ class MusicFilters(commands.Cog):
         if not player:
             return
 
-
         # Add/Set music filter
-        await player.add_filter(
-            lava_lyra.Timescale.vaporwave()
-        )
+        await player.add_filter(lava_lyra.Timescale.vaporwave())
 
-        self.music_embed.description = f"Filter set as `vaporwave`."
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = "Filter set as `vaporwave`."
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
@@ -214,25 +231,30 @@ class MusicFilters(commands.Cog):
         if not player:
             return
 
-
         # Add/Set music filter
-        await player.add_filter(
-            lava_lyra.Karaoke(tag="karaoke")
-        )
+        await player.add_filter(lava_lyra.Karaoke(tag="karaoke"))
 
-        self.music_embed.description = f"Filter set as `karaoke`."
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = "Filter set as `karaoke`."
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
     @commands.command(name="channelmix")
     @commands.guild_only()
-    async def set_channelmix(self, ctx: commands.Context, left_to_left: float, right_to_right: float, left_to_right: float, right_to_left: float):
+    async def set_channelmix(
+        self,
+        ctx: commands.Context,
+        left_to_left: float,
+        right_to_right: float,
+        left_to_right: float,
+        right_to_left: float,
+    ):
         """Set music channel mix."""
         player = await self.get_player(ctx)
         if not player:
             return
-
 
         # Add/Set music filter
         await player.add_filter(
@@ -241,19 +263,23 @@ class MusicFilters(commands.Cog):
                 left_to_left=left_to_left,
                 right_to_right=right_to_right,
                 left_to_right=left_to_right,
-                right_to_left=right_to_left
+                right_to_left=right_to_left,
             ),
             fast_apply=True,
         )
 
-        self.music_embed.description = f"Channel mix setup."
-        self.music_embed.footer.text = f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        self.music_embed.description = "Channel mix setup."
+        self.music_embed.footer.text = (
+            f"`{self.bot.command_prefix}clearfilters` to disable filters"
+        )
 
         await ctx.send(embed=self.music_embed)
 
     @commands.command(name="clearfilters")
     @commands.guild_only()
-    async def clear_all_filters(self, ctx: commands.Context, *, filters: str | None = None):
+    async def clear_all_filters(
+        self, ctx: commands.Context, *, filters: str | None = None
+    ):
         """Clear all active filters."""
         player = await self.get_player(ctx)
         if not player:
