@@ -52,7 +52,13 @@ class EventHandler(commands.Cog):
         # Nodelink/Lavalink track end event
         print(f"End playing track: {track.title}. Reason: {reason}")
         # Play next song by using CustomPlayer
-        await player.play_next()
+        current = await player.play_next()
+
+        if not current:
+            return
+        
+        # Update music info
+        await player.update_message(content=f"Now playing: **{current.title}**")
 
     @commands.Cog.listener()
     async def on_lyra_track_stuck(

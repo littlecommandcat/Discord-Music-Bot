@@ -83,6 +83,8 @@ Players(active/total): `{stats.players_active}/{stats.players_total}`
                 f"Add **{track.title}** to play queue"
             )
         else:
+            # Set player home channel
+            player.home_channel = interaction.channel
             # Play the track with default volume
             await player.play_next(volume=50)
             return await interaction.followup.send(f"Now playing: **{track.title}**")
