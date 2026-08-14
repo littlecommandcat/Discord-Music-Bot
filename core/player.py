@@ -1,6 +1,5 @@
 import lava_lyra
 import discord
-import time
 from .queue import CustomQueue
 
 
@@ -31,9 +30,18 @@ class CustomPlayer(lava_lyra.Player):
             # Return channel as none
             self.home_channel = None
 
+    # Disconnect
+    async def disconnect(self, *, force = False):
+        # Clear cache
+        self.queue.clear()
+        self.queue.clear_history()
+        self.home_channel = None
+
+        return await super().disconnect(force=force)
+    
     # Destroy player
     async def destroy(self) -> None:
-        # Clear cache
+        # Clear cache(same as disconnect logic)
         self.queue.clear()
         self.queue.clear_history()
         self.home_channel = None

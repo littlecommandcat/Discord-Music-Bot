@@ -105,16 +105,6 @@ class EventHandler(commands.Cog):
         if not voice_client:
             return
 
-        # Bot leaves the voice channel
-        if (
-            member.id == self.bot.user.id
-            and before.channel is not None
-            and after.channel is None
-            and isinstance(voice_client, CustomPlayer)
-        ):
-            await voice_client.destroy()
-            return
-
         # Bot is not connected to a voice channel
         if not voice_client.channel:
             return
@@ -130,8 +120,6 @@ class EventHandler(commands.Cog):
         ):
             await voice_client.destroy()
 
-        else:
-            await voice_client.disconnect()
 
 
 async def setup(bot: commands.Bot):
